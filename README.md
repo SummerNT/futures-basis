@@ -5,6 +5,11 @@
 
 纯 Python 标准库实现，**不需要安装任何第三方包**。
 
+> **在线看板**：<https://summernt.github.io/futures-basis/>
+> **实操手册**：<https://summernt.github.io/futures-basis/manual.html>
+>
+> 每个工作日北京时间 16:00 由 GitHub Actions 自动更新。
+
 ---
 
 ## 一、5 分钟上手：每天只看三个数
