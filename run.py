@@ -1,0 +1,8 @@
+"""Launcher: python run.py [--days N] [--backfill] [--no-render]"""
+
+import sys
+
+from src.main import main
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local scratch
+_check.js
+_c.js
+_*.png
+_chrome_tmp/
+_ctmp/
+_edge_tmp/
+
+# Personal position config (contains your capital and entry price)
+data/position.json
