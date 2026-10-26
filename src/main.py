@@ -10,6 +10,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -77,6 +78,16 @@ def main(argv: list[str]) -> int:
     print("[2/4] futures daily quotes")
     added = refresh_futures(history, span)
     print(f"  new trading days: {added}, total cached: {len(history)}")
+
+    # A scheduled run that finds no new trading day should not rewrite pages:
+    # otherwise every cron slot produces a pointless commit differing only by
+    # the generated_at timestamp.
+    skip_if_no_new = os.environ.get("SKIP_IF_NO_NEW", "").strip().lower() in ("1", "true", "yes")
+    if skip_if_no_new and added == 0 and "--force" not in argv:
+        print("  no new trading day and SKIP_IF_NO_NEW is set -> skipping render")
+        save_json(DATA / config.HISTORY_FILE, history)
+        save_json(DATA / "spot.json", spot_map)
+        return 0
 
     save_json(DATA / config.HISTORY_FILE, history)
     save_json(DATA / "spot.json", spot_map)

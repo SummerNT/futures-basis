@@ -257,6 +257,30 @@ python run.py --no-render    # 只更新数据，不生成页面
 > **注意**：交易日 15:30 之后数据才完整。盘中运行会拿到不完整的当日文件，
 > 脚本发现当天数据缺失时会自动沿用前一个交易日。
 
+### 本地改动怎么提交（重要）
+
+`data/` 和 `docs/` 这两个目录由 **GitHub Actions 独占维护**。本地改完代码后：
+
+```bash
+git add src/ .github/ run.py
+git commit -m "你的说明"
+git push
+```
+
+**不要用 `git add -A` 或 `git add .`** —— 它们会把本地跑 `run.py` 生成的
+`data/*.json` 和 `docs/index.html` 一起带进去，而 Actions 也在提交同样的文件，
+push 时必然冲突。
+
+如果只是想本地预览效果，跑完 `python run.py` 直接双击 `docs/index.html` 看就行，
+不需要提交任何东西。
+
+万一已经冲突了（`both modified: data/metrics.json`）：
+
+```bash
+git checkout origin/main -- data/ docs/index.html
+git add data/ docs/index.html
+```
+
 ---
 
 ## 四、部署到 GitHub Pages（手机随时看）

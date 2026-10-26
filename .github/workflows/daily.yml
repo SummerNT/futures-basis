@@ -37,6 +37,9 @@ jobs:
       - name: Refresh data and render page
         env:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+          # Scheduled runs skip rendering when no new trading day exists, so the
+          # three cron slots cannot produce duplicate commits.
+          SKIP_IF_NO_NEW: ${{ github.event_name == 'schedule' }}
         run: python run.py --days 20
 
       - name: Commit updated data and page
