@@ -2,8 +2,19 @@ name: daily-refresh
 
 on:
   schedule:
-    # 08:00 UTC = 16:00 Beijing, Monday to Friday
-    - cron: "0 8 * * 1-5"
+    # Never use an exact hour: GitHub drops or delays scheduled runs during
+    # high load, and minute 0 is the worst slot. Three staggered slots give
+    # redundancy -- a later run simply finds no data change and skips commit.
+    # Beijing 16:13 / 16:43 / 18:13  ==  UTC 08:13 / 08:43 / 10:13, Mon-Fri.
+    - cron: "13 8 * * 1-5"
+    - cron: "43 8 * * 1-5"
+    - cron: "13 10 * * 1-5"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "run.py"
+      - ".github/workflows/daily.yml"
   workflow_dispatch:
 
 permissions:
