@@ -32,7 +32,7 @@ def load_json(path: Path, default):
 
 def save_json(path: Path, obj) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(obj, ensure_ascii=False, indent=1), encoding="utf-8")
+    path.write_text(json.dumps(obj, ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
 
 
 def refresh_futures(history: dict, span: int, progress: bool = True) -> int:
@@ -95,7 +95,7 @@ def main(argv: list[str]) -> int:
 
         html = render.render(payload)
         DOCS.mkdir(parents=True, exist_ok=True)
-        (DOCS / "index.html").write_text(html, encoding="utf-8")
+        (DOCS / "index.html").write_text(html, encoding="utf-8", newline="\n")
         print(f"  wrote {DOCS / 'index.html'}")
 
     print("[5/5] push")
