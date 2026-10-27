@@ -54094,5 +54094,201 @@
     "pre_settle": 6292.6
    }
   ]
+ },
+ "2026-10-27": {
+  "futures": [
+   {
+    "code": "IC2611",
+    "open": 6721.8,
+    "high": 6772.6,
+    "low": 6455.2,
+    "volume": 36767,
+    "amount": 4865618.188,
+    "oi": 54645,
+    "close": 6455.2,
+    "settle": 6526.0,
+    "pre_settle": 6677.6
+   },
+   {
+    "code": "IC2612",
+    "open": 6700.0,
+    "high": 6732.2,
+    "low": 6405.6,
+    "volume": 110174,
+    "amount": 14465994.196,
+    "oi": 176362,
+    "close": 6407.6,
+    "settle": 6475.0,
+    "pre_settle": 6630.8
+   },
+   {
+    "code": "IC2703",
+    "open": 6542.0,
+    "high": 6583.8,
+    "low": 6260.0,
+    "volume": 18343,
+    "amount": 2353313.496,
+    "oi": 60553,
+    "close": 6263.2,
+    "settle": 6328.8,
+    "pre_settle": 6482.2
+   },
+   {
+    "code": "IC2706",
+    "open": 6371.2,
+    "high": 6433.0,
+    "low": 6102.8,
+    "volume": 6008,
+    "amount": 752052.672,
+    "oi": 10393,
+    "close": 6108.2,
+    "settle": 6177.0,
+    "pre_settle": 6323.6
+   },
+   {
+    "code": "IF2611",
+    "open": 4088.8,
+    "high": 4094.8,
+    "low": 4018.0,
+    "volume": 25392,
+    "amount": 3096673.962,
+    "oi": 49772,
+    "close": 4021.0,
+    "settle": 4047.8,
+    "pre_settle": 4067.2
+   },
+   {
+    "code": "IF2612",
+    "open": 4059.6,
+    "high": 4066.6,
+    "low": 3989.8,
+    "volume": 68222,
+    "amount": 8257809.372,
+    "oi": 178152,
+    "close": 3991.2,
+    "settle": 4018.0,
+    "pre_settle": 4036.6
+   },
+   {
+    "code": "IF2703",
+    "open": 3980.6,
+    "high": 3988.6,
+    "low": 3910.8,
+    "volume": 11870,
+    "amount": 1408539.3,
+    "oi": 67329,
+    "close": 3915.8,
+    "settle": 3939.4,
+    "pre_settle": 3957.6
+   },
+   {
+    "code": "IF2706",
+    "open": 3903.2,
+    "high": 3914.2,
+    "low": 3833.2,
+    "volume": 7471,
+    "amount": 868794.318,
+    "oi": 15998,
+    "close": 3835.6,
+    "settle": 3858.2,
+    "pre_settle": 3879.8
+   },
+   {
+    "code": "IH2611",
+    "open": 2746.0,
+    "high": 2753.8,
+    "low": 2728.0,
+    "volume": 10497,
+    "amount": 863834.55,
+    "oi": 19548,
+    "close": 2731.6,
+    "settle": 2741.2,
+    "pre_settle": 2737.2
+   },
+   {
+    "code": "IH2612",
+    "open": 2721.8,
+    "high": 2731.6,
+    "low": 2708.0,
+    "volume": 30555,
+    "amount": 2494802.712,
+    "oi": 70889,
+    "close": 2709.2,
+    "settle": 2720.2,
+    "pre_settle": 2716.0
+   },
+   {
+    "code": "IH2703",
+    "open": 2681.0,
+    "high": 2689.2,
+    "low": 2663.6,
+    "volume": 3749,
+    "amount": 301288.308,
+    "oi": 18490,
+    "close": 2666.4,
+    "settle": 2675.6,
+    "pre_settle": 2674.4
+   },
+   {
+    "code": "IH2706",
+    "open": 2644.0,
+    "high": 2653.8,
+    "low": 2628.0,
+    "volume": 1227,
+    "amount": 97275.0,
+    "oi": 2640,
+    "close": 2628.4,
+    "settle": 2638.4,
+    "pre_settle": 2638.2
+   },
+   {
+    "code": "IM2611",
+    "open": 6654.8,
+    "high": 6714.8,
+    "low": 6383.6,
+    "volume": 58196,
+    "amount": 7632400.908,
+    "oi": 98110,
+    "close": 6388.0,
+    "settle": 6453.2,
+    "pre_settle": 6601.4
+   },
+   {
+    "code": "IM2612",
+    "open": 6622.4,
+    "high": 6670.8,
+    "low": 6333.2,
+    "volume": 200707,
+    "amount": 26108919.408,
+    "oi": 291309,
+    "close": 6339.2,
+    "settle": 6403.8,
+    "pre_settle": 6551.0
+   },
+   {
+    "code": "IM2703",
+    "open": 6450.4,
+    "high": 6512.2,
+    "low": 6177.4,
+    "volume": 37057,
+    "amount": 4702241.1,
+    "oi": 103437,
+    "close": 6179.6,
+    "settle": 6245.0,
+    "pre_settle": 6390.8
+   },
+   {
+    "code": "IM2706",
+    "open": 6290.0,
+    "high": 6347.6,
+    "low": 6014.0,
+    "volume": 15146,
+    "amount": 1866642.32,
+    "oi": 25881,
+    "close": 6017.0,
+    "settle": 6075.6,
+    "pre_settle": 6226.0
+   }
+  ]
  }
 }
