@@ -219,12 +219,24 @@ python run.py
 
 | 文件 | 说明 |
 |---|---|
-| `docs/index.html` | 可视化看板，双击用浏览器打开 |
+| `docs/preview.html` | 本地预览页，双击用浏览器打开 |
 | `data/metrics.json` | 计算后的全部指标 |
 | `data/history.json` | 期货日行情历史缓存 |
 | `data/spot.json` | 现货指数历史缓存 |
 
 首次运行会回填约 420 天历史（约 290 个交易日、两分钟），之后每次只补缺失的那几天。
+
+**本地跑只写 `docs/preview.html`，不碰 `docs/index.html`。**
+
+`docs/index.html` 归 GitHub Actions 独占：它是 Pages 发布的内容，由 CI 生成并提交。
+本地另开一个文件，两边的写入物理隔离，所以本地跑多少次都不会和远端打架。
+
+想强制本地覆盖 index.html（一般不需要）：
+
+```bash
+python run.py --publish
+```
+
 
 ### 关于"每次都重新生成 HTML"
 

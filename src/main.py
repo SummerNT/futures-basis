@@ -106,8 +106,13 @@ def main(argv: list[str]) -> int:
 
         html = render.render(payload)
         DOCS.mkdir(parents=True, exist_ok=True)
-        (DOCS / "index.html").write_text(html, encoding="utf-8", newline="\n")
-        print(f"  wrote {DOCS / 'index.html'}")
+        # CI owns docs/index.html (tracked by git) because Pages publishes it.
+        # A local run writes docs/preview.html instead (gitignored), so a local
+        # preview can never collide with the committed page.
+        is_ci = os.environ.get("CI", "").strip().lower() in ("1", "true")
+        target = DOCS / "index.html" if (is_ci or "--publish" in argv) else DOCS / "preview.html"
+        target.write_text(html, encoding="utf-8", newline="\n")
+        print(f"  wrote {target}")
 
     print("[5/5] push")
     from . import push

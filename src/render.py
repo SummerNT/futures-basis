@@ -261,7 +261,8 @@ function buildBanner() {
 function renderHeader() {
   document.getElementById('subline').textContent =
     '数据截止 ' + DATA.as_of + ' 收盘 · 四个品种 ｜ 表观年化贴水口径（未扣分红）';
-  document.getElementById('stamp').innerHTML = '数据来源<br>中金所 · 新浪财经';
+  document.getElementById('stamp').innerHTML =
+    '生成于<br>' + DATA.generated_at;
   document.getElementById('banner').innerHTML = buildBanner();
 }
 

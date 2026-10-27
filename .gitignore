@@ -21,3 +21,4 @@ logs/
 # Personal position config (contains your capital and entry price)
 data/position.json
 _*.html
+docs/preview.html
