@@ -18,7 +18,11 @@ _ctmp/
 _edge_tmp/
 logs/
 
+# Derived artifact, regenerated on every run
+data/metrics.json
+
 # Personal position config (contains your capital and entry price)
 data/position.json
 _*.html
 docs/preview.html
+data/metrics.json
