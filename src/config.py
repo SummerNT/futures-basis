@@ -38,6 +38,10 @@ BACKFILL_DAYS = 420
 # Rolling window (trading days) for percentile calculations.
 PERCENTILE_WINDOW = 244
 
+# Calendar days before expiry treated as the "must roll" deadline
+# (14 calendar days is roughly 10 trading days).
+ROLL_BUFFER_DAYS = 14
+
 # Roll signal threshold: near-month minus next-month spread above this
 # percentile is treated as a favourable roll window.
 ROLL_SIGNAL_PCT = 75.0

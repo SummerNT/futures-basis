@@ -16,6 +16,8 @@ _*.png
 _chrome_tmp/
 _ctmp/
 _edge_tmp/
+logs/
 
 # Personal position config (contains your capital and entry price)
 data/position.json
+_*.html

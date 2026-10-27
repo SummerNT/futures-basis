@@ -124,6 +124,22 @@ input:focus{outline:none;border-color:var(--accent);background:#fff}
   </div>
 
   <div class="card" style="margin-bottom:14px">
+    <h3>合约到期日历</h3>
+    <div style="overflow-x:auto">
+      <table id="calTable"></table>
+    </div>
+    <div class="note" id="calNote" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h3>合约到期日历</h3>
+    <div style="overflow-x:auto">
+      <table id="calTable"></table>
+    </div>
+    <div class="note" id="calNote" style="margin-top:8px"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
     <h3>主力合约年化贴水历史（近 244 个交易日）</h3>
     <div id="chartHist" class="chart"></div>
   </div>
@@ -282,6 +298,72 @@ function renderHead2() {
   const rv = rollVerdict(r.pct, r.signal);
   document.getElementById('rollPill').innerHTML =
     '<span class="pill ' + rv.cls + '">' + rv.text + '</span>';
+}
+
+function renderCalendar() {
+  const d = DATA.products[CUR];
+  const cs = d.contracts || [];
+  const rows = cs.map(c => {
+    const isMain = c.code === d.main;
+    let tag = '';
+    if (c.days_to_roll <= 5) tag = '<span class="pill p-bad">该换月了</span>';
+    else if (c.days_to_roll <= 15) tag = '<span class="pill p-mid">准备换月</span>';
+    else if (isMain) tag = '<span class="pill p-neutral">主力</span>';
+    const dl = c.days_to_roll >= 0 ? String(c.days_to_roll) : '<span class="up">已过</span>';
+    return '<tr>'
+      + '<td><b>' + c.code + '</b></td>'
+      + '<td>' + c.expiry + '</td>'
+      + '<td><b>' + c.days + '</b></td>'
+      + '<td>' + c.trading_days + '</td>'
+      + '<td>' + c.roll_deadline + '</td>'
+      + '<td>' + dl + '</td>'
+      + '<td style="text-align:right">' + tag + '</td>'
+      + '</tr>';
+  }).join('');
+
+  document.getElementById('calTable').innerHTML =
+    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th></th></tr></thead><tbody>'
+    + rows + '</tbody>';
+
+  const main = cs.filter(c => c.code === d.main)[0];
+  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。';
+  if (main) {
+    note += ' 当前主力 <b>' + main.code + '</b> 距建议换月截止还有 <b>' + main.days_to_roll + '</b> 天。';
+  }
+  document.getElementById('calNote').innerHTML = note;
+}
+
+function renderCalendar() {
+  const d = DATA.products[CUR];
+  const cs = d.contracts || [];
+  const rows = cs.map(c => {
+    const isMain = c.code === d.main;
+    let tag = '';
+    if (c.days_to_roll <= 5) tag = '<span class="pill p-bad">该换月了</span>';
+    else if (c.days_to_roll <= 15) tag = '<span class="pill p-mid">准备换月</span>';
+    else if (isMain) tag = '<span class="pill p-neutral">主力</span>';
+    const dl = c.days_to_roll >= 0 ? String(c.days_to_roll) : '<span class="up">已过</span>';
+    return '<tr>'
+      + '<td><b>' + c.code + '</b></td>'
+      + '<td>' + c.expiry + '</td>'
+      + '<td><b>' + c.days + '</b></td>'
+      + '<td>' + c.trading_days + '</td>'
+      + '<td>' + c.roll_deadline + '</td>'
+      + '<td>' + dl + '</td>'
+      + '<td style="text-align:right">' + tag + '</td>'
+      + '</tr>';
+  }).join('');
+
+  document.getElementById('calTable').innerHTML =
+    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th></th></tr></thead><tbody>'
+    + rows + '</tbody>';
+
+  const main = cs.filter(c => c.code === d.main)[0];
+  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。';
+  if (main) {
+    note += ' 当前主力 <b>' + main.code + '</b> 距建议换月截止还有 <b>' + main.days_to_roll + '</b> 天。';
+  }
+  document.getElementById('calNote').innerHTML = note;
 }
 
 function chartHist() {
@@ -515,6 +597,7 @@ function renderFoot() {
 function renderAll() {
   renderTabs();
   renderHead2();
+  renderCalendar();
   chartHist();
   chartContracts();
   chartSlope();

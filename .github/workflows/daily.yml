@@ -1,14 +1,14 @@
 name: daily-refresh
 
 on:
-  schedule:
-    # Never use an exact hour: GitHub drops or delays scheduled runs during
-    # high load, and minute 0 is the worst slot. Three staggered slots give
-    # redundancy -- a later run simply finds no data change and skips commit.
-    # Beijing 16:13 / 16:43 / 18:13  ==  UTC 08:13 / 08:43 / 10:13, Mon-Fri.
-    - cron: "13 8 * * 1-5"
-    - cron: "43 8 * * 1-5"
-    - cron: "13 10 * * 1-5"
+  # GitHub's built-in scheduler proved unreliable for this repo: runs were
+  # delayed by 6+ hours or dropped entirely (2026-10-26 / 10-27). Scheduling
+  # is now handled by a Cloudflare Worker that calls the workflow_dispatch
+  # API at 16:30 Beijing time (see scripts/worker.js).
+  # schedule:
+  #   - cron: "13 8 * * 1-5"
+  #   - cron: "43 8 * * 1-5"
+  #   - cron: "13 10 * * 1-5"
   push:
     branches: [main]
     paths:
