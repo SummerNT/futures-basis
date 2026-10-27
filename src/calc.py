@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional
 
 from . import config
@@ -314,7 +314,6 @@ def build(history: Dict[str, dict], spot_map: Dict[str, Dict[str, float]]) -> di
 
     return {
         "as_of": last_date,
-        "generated_at": datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M"),
         "margin_rate": config.DEFAULT_MARGIN_RATE,
         "products": products,
     }
