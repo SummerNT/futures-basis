@@ -40,9 +40,13 @@ if errorlevel 1 goto :fail
 echo.
 echo 完成。CI 会自动重新生成页面，约 1 分钟后生效。
 echo 线上地址 https://summernt.github.io/futures-basis/
+echo.
+pause
 exit /b 0
 
 :fail
 echo.
 echo 出错了。把上面的输出发给 WorkBuddy。
+echo.
+pause
 exit /b 1

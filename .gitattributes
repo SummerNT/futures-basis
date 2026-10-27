@@ -4,3 +4,7 @@
 *.md text eol=lf
 *.py text eol=lf
 *.yml text eol=lf
+
+# Windows batch files must be CRLF or cmd.exe misparses them
+*.cmd text eol=crlf
+*.bat text eol=crlf
