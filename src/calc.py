@@ -164,6 +164,47 @@ def slope_series(
     return out
 
 
+def contract_percentiles(
+    history: Dict[str, dict],
+    spot_map: Dict[str, Dict[str, float]],
+    root: str,
+    min_samples: int = 20,
+) -> Dict[str, dict]:
+    """Percentile of each contract against its OWN history.
+
+    The main-contract percentile compares today against whichever contract was
+    main at the time, which mixes different maturities. This compares a given
+    contract against how it itself traded, so a far-month contract gets a
+    meaningful reading instead of inheriting the front month's context.
+    """
+    series: Dict[str, List[float]] = {}
+    for ds in sorted(history.keys()):
+        if ds.startswith("__"):
+            continue
+        spot = spot_map.get(root, {}).get(ds)
+        if not spot:
+            continue
+        fut = [f for f in history[ds].get("futures", []) if f["code"][:2] == root]
+        if not fut:
+            continue
+        as_of = datetime.strptime(ds, "%Y-%m-%d").date()
+        for m in daily_product_rows(fut, spot, as_of):
+            series.setdefault(m["code"], []).append(m["annual_pct"])
+
+    out: Dict[str, dict] = {}
+    for code, vals in series.items():
+        if len(vals) < min_samples:
+            continue
+        cur = vals[-1]
+        out[code] = {
+            "pct": round(sum(1 for v in vals if v <= cur) / len(vals) * 100, 1),
+            "n": len(vals),
+            "min": round(min(vals), 2),
+            "max": round(max(vals), 2),
+        }
+    return out
+
+
 def contract_snapshots(
     history: Dict[str, dict],
     spot_map: Dict[str, Dict[str, float]],
@@ -299,6 +340,7 @@ def build(history: Dict[str, dict], spot_map: Dict[str, Dict[str, float]]) -> di
             "stats": stats,
             "roll": sig,
             "contract_snapshots": contract_snapshots(history, spot_map, root),
+            "contract_stats": contract_percentiles(history, spot_map, root),
             "slope_series": slope_series(history, spot_map, root),
             "main_series": {
                 "dates": [x["date"] for x in window],

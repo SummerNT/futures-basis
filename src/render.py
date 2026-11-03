@@ -310,6 +310,10 @@ function renderCalendar() {
     else if (c.days_to_roll <= 15) tag = '<span class="pill p-mid">准备换月</span>';
     else if (isMain) tag = '<span class="pill p-neutral">主力</span>';
     const dl = c.days_to_roll >= 0 ? String(c.days_to_roll) : '<span class="up">已过</span>';
+    const st = (d.contract_stats || {})[c.code];
+    const pctCell = st
+      ? '<b>' + f2(st.pct) + '%</b><span class="muted" style="font-size:10px"> n=' + st.n + '</span>'
+      : '<span class="muted">—</span>';
     return '<tr>'
       + '<td><b>' + c.code + '</b></td>'
       + '<td>' + c.expiry + '</td>'
@@ -317,16 +321,19 @@ function renderCalendar() {
       + '<td>' + c.trading_days + '</td>'
       + '<td>' + c.roll_deadline + '</td>'
       + '<td>' + dl + '</td>'
+      + '<td>' + f2(c.annual_pct) + '%</td>'
+      + '<td>' + pctCell + '</td>'
       + '<td style="text-align:right">' + tag + '</td>'
       + '</tr>';
   }).join('');
 
   document.getElementById('calTable').innerHTML =
-    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th></th></tr></thead><tbody>'
+    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th>年化</th><th>自身分位</th><th></th></tr></thead><tbody>'
     + rows + '</tbody>';
 
   const main = cs.filter(c => c.code === d.main)[0];
-  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。';
+  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。'
+    + ' <b>「自身分位」</b>是该合约与它自己的历史比（不是主力口径），n 为样本天数；样本少于 20 天的不显示。';
   if (main) {
     note += ' 当前主力 <b>' + main.code + '</b> 距建议换月截止还有 <b>' + main.days_to_roll + '</b> 天。';
   }
@@ -343,6 +350,10 @@ function renderCalendar() {
     else if (c.days_to_roll <= 15) tag = '<span class="pill p-mid">准备换月</span>';
     else if (isMain) tag = '<span class="pill p-neutral">主力</span>';
     const dl = c.days_to_roll >= 0 ? String(c.days_to_roll) : '<span class="up">已过</span>';
+    const st = (d.contract_stats || {})[c.code];
+    const pctCell = st
+      ? '<b>' + f2(st.pct) + '%</b><span class="muted" style="font-size:10px"> n=' + st.n + '</span>'
+      : '<span class="muted">—</span>';
     return '<tr>'
       + '<td><b>' + c.code + '</b></td>'
       + '<td>' + c.expiry + '</td>'
@@ -350,16 +361,19 @@ function renderCalendar() {
       + '<td>' + c.trading_days + '</td>'
       + '<td>' + c.roll_deadline + '</td>'
       + '<td>' + dl + '</td>'
+      + '<td>' + f2(c.annual_pct) + '%</td>'
+      + '<td>' + pctCell + '</td>'
       + '<td style="text-align:right">' + tag + '</td>'
       + '</tr>';
   }).join('');
 
   document.getElementById('calTable').innerHTML =
-    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th></th></tr></thead><tbody>'
+    '<thead><tr><th>合约</th><th>到期日</th><th>剩余天数</th><th>约剩交易日</th><th>建议换月截止</th><th>距截止</th><th>年化</th><th>自身分位</th><th></th></tr></thead><tbody>'
     + rows + '</tbody>';
 
   const main = cs.filter(c => c.code === d.main)[0];
-  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。';
+  let note = '「建议换月截止」= 到期日往前 14 个自然日（约 10 个交易日）。剩余交易日按 5/7 估算，未扣法定节假日。'
+    + ' <b>「自身分位」</b>是该合约与它自己的历史比（不是主力口径），n 为样本天数；样本少于 20 天的不显示。';
   if (main) {
     note += ' 当前主力 <b>' + main.code + '</b> 距建议换月截止还有 <b>' + main.days_to_roll + '</b> 天。';
   }
