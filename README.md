@@ -240,7 +240,8 @@ python run.py --publish
 
 ### 关于"每次都重新生成 HTML"
 
-**是的，默认每次都重写 `docs/index.html`，而且必须如此。**
+**是的，每次都必须重写一次 HTML** —— 本地运行写 `docs/preview.html`，
+CI 运行写 `docs/index.html`（两边分开是为了避免互相覆盖，见上）。
 
 原因：这个页面是**单文件设计**，所有数据在生成时直接写进 HTML 里。
 好处是双击就能打开、能离线看、托管到任何静态服务都不用配置。
@@ -271,27 +272,53 @@ python run.py --no-render    # 只更新数据，不生成页面
 
 ### 本地改动怎么提交（重要）
 
-`data/` 和 `docs/` 这两个目录由 **GitHub Actions 独占维护**。本地改完代码后：
+`data/` 和 `docs/index.html` 由 **GitHub Actions 独占维护**。改完代码后最省事的方式：
 
 ```bash
-git add src/ .github/ run.py
+scripts\push.cmd
+```
+
+它会自动 `pull --rebase`、只暂存代码和文档、提交、推送；推送被拒时会自动再同步重试一次。
+
+手工提交的话：
+
+```bash
+git add src/ .github/ scripts/ run.py README.md docs/manual.md
 git commit -m "你的说明"
 git push
 ```
 
-**不要用 `git add -A` 或 `git add .`** —— 它们会把本地跑 `run.py` 生成的
-`data/*.json` 和 `docs/index.html` 一起带进去，而 Actions 也在提交同样的文件，
-push 时必然冲突。
+**不要用 `git add -A` 或 `git add .`** —— 会把本地生成的 `data/*.json` 一起带进去，
+而 Actions 也在提交同样的文件，push 时必然冲突。
 
-如果只是想本地预览效果，跑完 `python run.py` 直接双击 `docs/index.html` 看就行，
-不需要提交任何东西。
+如果只是想本地预览，跑完 `python run.py` 打开 `docs/preview.html` 就行
+（这个文件在 `.gitignore` 里，不会进仓库）。
 
-万一已经冲突了（`both modified: data/metrics.json`）：
+#### 数据文件冲突了怎么办
+
+`data/history.json` 和 `data/spot.json` 是按日期索引的字典。本地和 CI 各自补了
+**不同的交易日**时（比如本地只抓了最近 3 天，CI 已经提交了前一周），git 无法判断
+该保留谁，会报：
+
+```
+U       data/history.json
+error: Committing is not possible because you have unmerged files.
+```
+
+这种冲突有唯一正确的解法，一条命令搞定：
 
 ```bash
-git checkout origin/main -- data/ docs/index.html
-git add data/ docs/index.html
+python scripts/fix-data-conflict.py
 ```
+
+规则是：**取所有可用版本的日期并集，同一日期以远端（`origin/main`）为准**。
+脚本会打印每个来源的数据条数、哪些日期是本地补上的、哪些同日期内容被远端覆盖，
+修完自动 `git add`（若在 rebase 中还会自动 `rebase --continue`）。
+
+只想看看会不会冲突、不动文件：加 `--check`。
+
+> 这个脚本只处理数据文件的**结构**冲突。如果冲突发生在 `src/` 的代码里，
+> 说明两边改了同一段逻辑，那必须人工看——脚本会直接报「无冲突」并跳过。
 
 ---
 
@@ -434,9 +461,18 @@ futures-basis/
 │   ├── render.py           HTML 看板生成
 │   ├── push.py             PushPlus 微信推送
 │   └── main.py             流程编排
+├── scripts/
+│   ├── push.cmd            一键同步 + 提交 + 推送
+│   ├── refresh.cmd         本地定时刷新（备份方案）
+│   ├── fix-data-conflict.py  自动解决 data/*.json 的合并冲突
+│   ├── worker.js           Cloudflare Worker（可靠定时触发）
+│   └── worker-deploy.md    Worker 部署步骤
 ├── data/                   本地数据缓存（不要手动改）
-├── docs/index.html         生成的页面（GitHub Pages 发布这里）
-└── .github/workflows/daily.yml   定时任务
+├── docs/
+│   ├── index.html          生成的页面（GitHub Pages 发布这里，CI 独占）
+│   ├── preview.html        本地预览页（gitignored）
+│   └── manual.md           实操手册
+└── .github/workflows/daily.yml   数据刷新任务
 ```
 
 ---

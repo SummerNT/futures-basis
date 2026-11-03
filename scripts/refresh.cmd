@@ -16,6 +16,14 @@ echo ===== %date% %time% ===== >> "%LOG%"
 
 REM 1) Sync with remote first, so CI commits do not cause a push conflict.
 git pull --rebase --autostash origin main >> "%LOG%" 2>&1
+if errorlevel 1 (
+    echo [WARN] pull failed, trying data conflict fix >> "%LOG%"
+    "%PY%" scripts\fix-data-conflict.py >> "%LOG%" 2>&1
+    if errorlevel 1 (
+        echo [ERROR] data conflict could not be resolved >> "%LOG%"
+        exit /b 1
+    )
+)
 
 REM 2) Fetch quotes, compute, render.
 "%PY%" run.py --days 5 >> "%LOG%" 2>&1
@@ -31,8 +39,16 @@ if errorlevel 1 (
     git commit -m "data: refresh %date%" >> "%LOG%" 2>&1
     git push origin main >> "%LOG%" 2>&1
     if errorlevel 1 (
-        echo [ERROR] push failed, will retry next run >> "%LOG%"
-        exit /b 1
+        echo [WARN] push rejected, syncing and retrying once >> "%LOG%"
+        git pull --rebase --autostash origin main >> "%LOG%" 2>&1
+        if errorlevel 1 (
+            "%PY%" scripts\fix-data-conflict.py >> "%LOG%" 2>&1
+        )
+        git push origin main >> "%LOG%" 2>&1
+        if errorlevel 1 (
+            echo [ERROR] push failed, will retry next run >> "%LOG%"
+            exit /b 1
+        )
     )
     echo [OK] pushed >> "%LOG%"
 ) else (

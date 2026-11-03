@@ -7,12 +7,26 @@ REM
 REM Why this exists: data/ and docs/ are owned by GitHub Actions. If you run
 REM `git add -A`, your locally generated copies get staged too and collide
 REM with the CI commits. This script only ever stages code and docs sources.
+REM
+REM Conflict handling: when a local run and a CI run appended different
+REM trading days, git cannot merge the date-keyed JSON. scripts\fix-data-conflict.py
+REM resolves that deterministically (union of dates, remote wins), so this
+REM script runs it automatically instead of stopping.
 
 cd /d D:\WorkBuddy_spaces\Finance\futures-basis
 
+set "PY=python"
+where python >nul 2>&1
+if errorlevel 1 set "PY=C:\Users\myg10\.workbuddy\binaries\python\versions\3.13.12\python.exe"
+
 echo [1/3] 同步远端...
 git pull --rebase --autostash origin main
-if errorlevel 1 goto :fail
+if errorlevel 1 (
+    echo.
+    echo   同步失败，尝试自动合并数据文件冲突...
+    "%PY%" scripts\fix-data-conflict.py
+    if errorlevel 1 goto :fail
+)
 
 echo [2/3] 暂存代码改动...
 REM Never data/ or docs/index.html -- those belong to CI.
@@ -35,8 +49,19 @@ echo   没有代码改动，跳过提交
 :push
 echo [3/3] 推送到 GitHub...
 git push origin main
+if not errorlevel 1 goto :done
+
+echo.
+echo   推送被拒，重新同步后重试一次...
+git pull --rebase --autostash origin main
+if errorlevel 1 (
+    "%PY%" scripts\fix-data-conflict.py
+    if errorlevel 1 goto :fail
+)
+git push origin main
 if errorlevel 1 goto :fail
 
+:done
 echo.
 echo 完成。CI 会自动重新生成页面，约 1 分钟后生效。
 echo 线上地址 https://summernt.github.io/futures-basis/
